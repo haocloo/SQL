@@ -10,3 +10,14 @@ FROM
 WHERE
     TABLE_NAME = 'INDUSTRY';
 ```
+
+
+### Show all column names
+```sql
+SELECT
+    COLUMN_NAME
+FROM
+    ALL_TAB_COLUMNS
+WHERE
+    TABLE_NAME = 'STOCKCLOSING';
+```
