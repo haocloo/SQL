@@ -104,62 +104,60 @@ FROM
 -- A NEW RECORD IS INSERTED, THE RET_PRICE WILL BE AUTO COMPUTED AS 5% MORE THAN THE COST PRICE. FOR
 -- INSTANCE, A BOOK WITH COST PRICE OF $10.00 IS INSERTED;
 -- THE RET_PRICE OF THAT BOOK WOULD BE $10.50
-CREATE TRIGGER trg_books_in_kl
-ON BOOKS_IN_KL
-AFTER INSERT, UPDATE
-AS
+CREATE TRIGGER TRG_BOOKS_IN_KL ON BOOKS_IN_KL AFTER
+    INSERT OR UPDATE OF COST ON BOOKS_IN_KL FOR EACH ROW AS
 BEGIN
-  UPDATE BOOKS_IN_KL
-  SET RET_PRICE = COST * 1.05
-  FROM BOOKS_IN_KL
-  INNER JOIN inserted
-  ON BOOKS_IN_KL.ISBN = inserted.ISBN;
+    UPDATE BOOKS_IN_KL
+    SET
+        RET_PRICE = NEW.COST * 1.05
+    WHERE
+        ISBN = NEW.ISBN;
 END;
 
-
--- Question8:
--- How many rows will be listed when the following SQL command is executed?
--- SELECT * FROM JOB CROSS JOIN EMPLOYEE;
-11 (Job) x 18 (Employee) = 198 rows
-
--- Question 9:
--- By running the following SQL command,
--- SELECT * FROM JOB, EMPLOYEE;
--- similar results as of what have been produced by the SQL command 
--- in Question 8 can be generated. 
--- [TRUE/FALSE]
-True, because the comma is equivalent to cross join
-
--- Question 10:
--- Produce the output based on the following SQL command.
--- SELECT JOB_CODE, JOB_DESCRIPTION, EMP_LNAME 
--- FROM JOB NATURAL JOIN EMPLOYEE
--- ORDER BY EMP_LNAME;
-
-
--- Question 11:
--- Produce the output based on the following SQL command.
--- SELECT JOB_CODE, JOB_DESCRIPTION, EMP_LNAME 
--- FROM JOB JOIN EMPLOYEE USING(JOB_CODE)
--- ORDER BY EMP_LNAME;
-
-
--- Question 12:
--- Produce the output based on the following SQL command.
--- SELECT JOB_CODE, EMP_LNAME
--- FROM JOB LEFT JOIN EMPLOYEE USING(JOB_CODE)
--- ORDER BY EMP_LNAME;
-
-
--- Question 13:
--- Produce the output based on the following SQL command.
--- SELECT JOB.JOB_CODE, EMP_LNAME
--- FROM JOB LEFT JOIN EMPLOYEE ON JOB.JOB_CODE = EMPLOYEE.JOB_CODE
--- ORDER BY EMP_LNAME;
-
--- QUESTION 14:
--- PRODUCE A LIST OF JOBS FROM THE JOB TABLE WHERE THE JOB_CHG_HOUR IS LESSER THAN THE OVERALL
--- AVERAGE OF THE JOB_CHG_HOUR. THE ANTICIPATED OUTPUT IS SHOWN AS FOLLOWS:
-SELECT JOB_CODE, JOB_DESCRIPTION, JOB_CHG_HOUR
-FROM JOB
-WHERE JOB_CHG_HOUR < (SELECT AVG(JOB_CHG_HOUR) FROM JOB);
+ -- Question8:
+ -- How many rows will be listed when the following SQL command is executed?
+ -- SELECT * FROM JOB CROSS JOIN EMPLOYEE;
+11 (JOB) X 18 (EMPLOYEE) = 198 ROWS
+ -- Question 9:
+ -- By running the following SQL command,
+ -- SELECT * FROM JOB, EMPLOYEE;
+ -- similar results as of what have been produced by the SQL command
+ -- in Question 8 can be generated.
+ -- [TRUE/FALSE]
+TRUE, BECAUSE THE COMMA IS EQUIVALENT TO CROSS JOIN
+ -- Question 10:
+ -- Produce the output based on the following SQL command.
+ -- SELECT JOB_CODE, JOB_DESCRIPTION, EMP_LNAME
+ -- FROM JOB NATURAL JOIN EMPLOYEE
+ -- ORDER BY EMP_LNAME;
+ -- Question 11:
+ -- Produce the output based on the following SQL command.
+ -- SELECT JOB_CODE, JOB_DESCRIPTION, EMP_LNAME
+ -- FROM JOB JOIN EMPLOYEE USING(JOB_CODE)
+ -- ORDER BY EMP_LNAME;
+ -- Question 12:
+ -- Produce the output based on the following SQL command.
+ -- SELECT JOB_CODE, EMP_LNAME
+ -- FROM JOB LEFT JOIN EMPLOYEE USING(JOB_CODE)
+ -- ORDER BY EMP_LNAME;
+ -- Question 13:
+ -- Produce the output based on the following SQL command.
+ -- SELECT JOB.JOB_CODE, EMP_LNAME
+ -- FROM JOB LEFT JOIN EMPLOYEE ON JOB.JOB_CODE = EMPLOYEE.JOB_CODE
+ -- ORDER BY EMP_LNAME;
+ -- QUESTION 14:
+ -- PRODUCE A LIST OF JOBS FROM THE JOB TABLE WHERE THE JOB_CHG_HOUR IS LESSER THAN THE OVERALL
+ -- AVERAGE OF THE JOB_CHG_HOUR. THE ANTICIPATED OUTPUT IS SHOWN AS FOLLOWS:
+SELECT
+    JOB_CODE,
+    JOB_DESCRIPTION,
+    JOB_CHG_HOUR
+FROM
+    JOB
+WHERE
+    JOB_CHG_HOUR < (
+        SELECT
+            AVG(JOB_CHG_HOUR)
+        FROM
+            JOB
+    );
